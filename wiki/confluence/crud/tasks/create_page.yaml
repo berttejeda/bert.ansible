@@ -1,0 +1,41 @@
+---
+- name: Build Request Payload
+  set_fact:
+    data_payload:
+      title: "{{ page_title }}"
+      type: "page"
+      space:
+        key: "{{ confluence_space_key }}"
+      body:
+        storage:
+          value: '{{ confluence_document_content | markdown2html }}'
+          representation: storage
+
+- name: Append parent page data to payload
+  set_fact:
+    data_payload: '{{ data_payload | combine(parent_page_data) }}'
+  vars:
+    parent_page_data:
+      ancestors: 
+        - id: "{{ confluence_parent_uri_response.json.results[0].id | default(omit) }}"
+  when: confluence_parent_uri_response.json is defined
+
+- name: Display data_payload
+  debug:
+    msg: |
+      {{ data_payload }}
+  when: debug_enabled
+
+- name: Create Page
+  uri:
+    url: '{{ confluence_url }}/{{ rest_api_endpoint }}'
+    method: POST
+    user: '{{ confluence_username }}'
+    password: '{{ confluence_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    body: "{{  data_payload | to_json }}"
+    return_content: yes
+  register: new_content_json
+...

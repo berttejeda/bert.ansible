@@ -1,0 +1,18 @@
+- block:
+    - name: Stop if default variables are not changed
+      assert:
+        that:
+          - page_title != 'ChangeMe'
+          - confluence_space_key != 'ChangeMe'
+          - confluence_username != 'ChangeMe'
+          - confluence_password != 'ChangeMe'
+      ignore_errors: False
+      run_once: yes  
+  rescue:
+    - fail:
+        msg: |-
+          You must supply all of the following:
+          Page Title (page_title)
+          Space Key (confluence_space_key)
+          Username (confluence_username)
+          Password (confluence_password)

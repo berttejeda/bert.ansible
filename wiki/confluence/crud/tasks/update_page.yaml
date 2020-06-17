@@ -1,0 +1,31 @@
+---
+- name: Build Request Payload
+  set_fact:
+    data_payload:
+      id: "{{ confluence_page_id }}"
+      title: "{{ page_title }}"
+      type: page
+      space:
+        key: "{{ confluence_space_key }}"
+      body:
+        storage:
+          value: '{{ confluence_document_content | markdown2html }}'
+          representation: storage
+      version:
+        number: "{{ confluence_page_version_incremented }}"                
+  vars:
+    confluence_page_version_incremented: "{{ confluence_uri_response.json.results[0].version.number + 1 }}"
+
+- name: Update Page
+  uri:
+    url: '{{ confluence_url }}/{{ rest_api_endpoint }}/{{ confluence_page_id }}'
+    method: PUT
+    user: '{{ confluence_username }}'
+    password: '{{ confluence_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    body: "{{  data_payload |  to_json }}"
+    return_content: yes
+  register: new_content_json      
+...

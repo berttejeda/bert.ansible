@@ -1,0 +1,18 @@
+---
+# Endpoints/URI
+rest_api_endpoint: rest/api/content
+tinymce_endpoint: rest/tinymce/1/markdownxhtmlconverter
+confluence_url: http://wiki.example.com
+# Confluence Destination Page Info
+page_title: ChangeMe
+confluence_space_key: ChangeMe
+# Credentials
+confluence_source_document_type: "{{ 'file' if not use_jinja_templating is defined else 'template' }}"
+confluence_username: ChangeMe
+confluence_password: ChangeMe
+# If set to True, the role will only retrieve confluence page data
+facts_only: False
+# If set to True, the role will delete a confluence page
+delete_page: False
+debug_enabled: False
+...

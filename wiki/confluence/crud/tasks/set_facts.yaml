@@ -1,0 +1,19 @@
+---
+- name: set fact | source document content
+  set_fact:
+    confluence_document_content: |-
+      {% if confluence_body_data is defined %}
+      {{ confluence_body_data }}
+      {% elif confluence_document is defined %}
+      {{ lookup(confluence_source_document_type, confluence_document) | default('') }}
+      {% else %}
+      ''
+      {% endif %}
+
+- name: set fact | Confluence Page ID
+  set_fact:
+    confluence_page_id: "{{ confluence_uri_response.json.results[0].id }}"
+  when: 
+    - confluence_uri_response.json.results is defined
+    - confluence_uri_response.json.results | length > 0
+...

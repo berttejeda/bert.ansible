@@ -1,0 +1,10 @@
+---
+- name: Delete Confluence Page
+  uri:
+    url: '{{ confluence_url }}/{{ rest_api_endpoint }}/{{ confluence_page_id }}'
+    method: DELETE
+    user: '{{ confluence_username }}'
+    password: '{{ confluence_password }}'
+    force_basic_auth: yes
+    status_code: 204
+...

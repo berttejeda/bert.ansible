@@ -1,0 +1,34 @@
+---
+- name: confluence | Assertions
+  include_tasks: assertions.yaml
+
+- name: confluence | Get Page Data
+  include_tasks: get_page.yaml
+
+- name: confluence | Set Facts
+  include_tasks: set_facts.yaml
+
+- name: Delete Confluence Page
+  include_tasks: delete_page.yaml
+  when: 
+    - confluence_uri_response.json.results is defined
+    - confluence_uri_response.json.results | length > 0
+    - delete_page
+    - not facts_only
+
+- name: Create Confluence Page
+  include_tasks: create_page.yaml
+  when: 
+    - confluence_uri_response.json.results is defined
+    - confluence_uri_response.json.results | length < 1
+    - not delete_page
+    - not facts_only
+
+- name: Update Confluence Page
+  include_tasks: update_page.yaml
+  when: 
+    - confluence_uri_response.json.results is defined
+    - confluence_uri_response.json.results | length > 0
+    - not delete_page
+    - not facts_only
+...

@@ -1,0 +1,24 @@
+---
+- name: confluence | Get Page Data
+  uri:
+    url: '{{ confluence_url }}/{{ rest_api_endpoint }}?title={{ page_title }}&spaceKey={{ confluence_space_key }}&expand=body.storage,history,space,container.history,container.version,version,ancestors'
+    method: GET
+    user: '{{ confluence_username }}'
+    password: '{{ confluence_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    return_content: yes
+  register: confluence_uri_response
+
+- name: confluence | Get Parent Page Data
+  uri:
+    url: '{{ confluence_url }}/{{ rest_api_endpoint }}?title={{ confluence_parent_page }}&spaceKey={{ confluence_space_key }}&expand=body.storage,history,space,container.history,container.version,version,ancestors'
+    method: GET
+    user: '{{ confluence_username }}'
+    password: '{{ confluence_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    return_content: yes
+  register: confluence_parent_uri_response
+  when: confluence_parent_page is defined
+...

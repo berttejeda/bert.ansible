@@ -1,0 +1,45 @@
+---
+- hosts: localhost
+  gather_facts: true
+  become: true
+  vars:
+    ansible_playbook_command: ANSIBLE_ROLES_PATH=. ansible-playbook --connection=local
+    required_parameters:
+      -s|--space: confluence_space_key
+      -r|--confluence-url: confluence_url
+    optional_parameters:
+      -t|--title: page_title
+      -D|--raw_body: confluence_body_data
+      -d|--document: confluence_document
+      -u|--user: confluence_username
+      -p|--password: confluence_password
+      -P|--parent-page: confluence_parent_page
+      --debug: debug_enabled
+      --jinja: use_jinja_templating
+      --delete: delete_page
+    help:
+      message: |
+        Interact with Atlassian Confluence
+      epilog:
+      examples:
+        - example1: |
+            tasks run -r http://wiki.example.com -d README.md -s myspace -t 'Installing Ansible'
+        - example2: |
+            tasks run -r http://wiki.example.com -d README.md -s myspace -t 'Installing Ansible' -u someuser -p somepassword
+    inventory: |
+      [deployment-hosts]
+      localhost
+    functions:
+      hello:
+        shell: bash
+        source: |-
+          echo hello
+  tasks:
+
+    # - name: Invoke confluence role
+    #   include_role:
+    #     name: roles/gabbledegak
+
+    - name: Invoke confluence role
+      include_role:
+        name: .
